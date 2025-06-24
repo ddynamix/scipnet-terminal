@@ -2,24 +2,27 @@ from blessed import Terminal
 import requests
 import re
 
+import scp_formatter
+
 base_url = "https://raw.githubusercontent.com/scp-data/scp-api/main/docs/data/scp/"
 term = Terminal()
 
 def successful_response(scpnum, response):
     print(term.yellow("Successfully retrieved SCP data"))
     response_json = response.json()
-    scp = response_json.get(f"SCP-{scpnum}")
-    print(term.white(scp.get("scp")))
-    print(term.white(scp.get("raw_source")))
+    metadata_json = requests.get(base_url + "items/index.json").json()
+    scp = response_json.get(f"SCP-{scpnum}").get("raw_source")
+
+    scp_formatter.formatted_print(metadata_json, scp)
 
 
 def normalize_scp_id(user_input):
     match = re.match(r'(?i)(?:scp[\s\-]*)?(\d+)', user_input.strip())
     if match:
-        scp_number = match.group(1).zfill(3)  # Optional: pad with zeros (e.g. 5 -> 005)
+        scp_number = match.group(1).zfill(3)  # pad with zeros (e.g. 5 -> 005)
         return scp_number
     else:
-        return None  # or raise an error, depending on your use case
+        return None
 
 
 print(term.home + term.clear)

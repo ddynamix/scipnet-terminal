@@ -4,7 +4,7 @@ import re
 term = Terminal()
 
 def format_bold(text: str):
-    return re.sub(r'\*\*(.*?)\*\*', r'{term.black_on_snow3}\1{term.normal}', text)
+    return re.sub(r'\*\*(.*?)\*\*', r'{term.white_on_webmaroon}\1{term.normal}', text)
 
 
 def clean_brackets(text: str):
@@ -22,7 +22,7 @@ def clean_brackets(text: str):
 
 
 def format_separator_line(line):
-    # Check if line consists only of 2 or more hyphens and nothing else
+    # Check if a line consists only of 2 or more hyphens and nothing else
     if line.strip() and all(char == '-' for char in line.strip()):
         if len(line.strip()) >= 2:
             # Return a line of '=' that spans the full terminal width
@@ -34,6 +34,10 @@ def clean_arrow(text: str):
     if text.strip() == ">":
         return ""
     return text
+
+
+def format_italics(text: str):
+    return re.sub(r'//(.*?)//', r'{term.snow4}\1{term.normal}', text)
 
 
 def formatted_print(metadata: str, scp: str):
@@ -56,5 +60,8 @@ def formatted_print(metadata: str, scp: str):
         
         # Clean all logs with empty lines
         line = clean_arrow(line)
+        
+        # Format any italics
+        line = format_italics(line)
 
         print(line.format(term=term) + "\n",)

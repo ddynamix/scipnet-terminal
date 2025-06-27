@@ -32,7 +32,7 @@ def format_separator_line(line):
 
 def clean_arrow(text: str):
     if text.strip() == ">":
-        return "\n"
+        return ""
     return text
 
 
